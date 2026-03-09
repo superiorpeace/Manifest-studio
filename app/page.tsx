@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef } from "react";
 import type { Layer, TextLayer } from "@/lib/types";
 import { uid } from "@/lib/utils";
+import { exportCanvas } from "@/lib/export";
 import Topbar from "@/components/Topbar";
 import LeftPanel from "@/components/LeftPanel";
 import Canvas from "@/components/Canvas";
@@ -11,12 +12,17 @@ import LayersPanel from "@/components/LayersPanel";
 import AffirmationsDrawer from "@/components/AffirmationsDrawer";
 import styles from "./page.module.css";
 
+// Canvas display size (matches Canvas.module.css .canvas dimensions)
+const CANVAS_W = 480;
+const CANVAS_H = 854;
+
 export default function Page() {
   const [layers, setLayers] = useState<Layer[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [background, setBackground] = useState("#080706");
   const [affirmationsOpen, setAffirmationsOpen] = useState(false);
   const [layersPanelOpen, setLayersPanelOpen] = useState(true);
+  const [exporting, setExporting] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
 
   const addLayer = useCallback((layer: Layer) => {
@@ -54,24 +60,14 @@ export default function Page() {
 
   const clearAll = useCallback(() => { setLayers([]); setSelectedId(null); }, []);
 
-  const exportPNG = useCallback(async () => {
-    const el = canvasRef.current;
-    if (!el) return;
+  const doExport = useCallback(async () => {
+    setExporting(true);
     try {
-      const { default: html2canvas } = await import("html2canvas");
-      const canvas = await html2canvas(el, {
-        useCORS: true, allowTaint: true,
-        width: el.offsetWidth, height: el.offsetHeight,
-        backgroundColor: null,
-      });
-      const link = document.createElement("a");
-      link.download = `manifest-studio-${Date.now()}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    } catch {
-      alert("Export failed. Try adding html2canvas: npm install html2canvas");
+      await exportCanvas(layers, background, CANVAS_W, CANVAS_H);
+    } finally {
+      setExporting(false);
     }
-  }, []);
+  }, [layers, background]);
 
   const insertText = useCallback((text: string) => {
     const layer: TextLayer = {
@@ -98,7 +94,8 @@ export default function Page() {
         onClear={clearAll}
         onToggleAffirmations={() => setAffirmationsOpen(v => !v)}
         affirmationsOpen={affirmationsOpen}
-        onExport={exportPNG}
+        onExport={doExport}
+        exporting={exporting}
         onToggleLayers={() => setLayersPanelOpen(v => !v)}
         layersPanelOpen={layersPanelOpen}
       />

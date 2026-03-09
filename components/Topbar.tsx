@@ -7,11 +7,12 @@ interface Props {
   onToggleAffirmations: () => void;
   affirmationsOpen: boolean;
   onExport: () => void;
+  exporting: boolean;
   onToggleLayers: () => void;
   layersPanelOpen: boolean;
 }
 
-export default function Topbar({ layerCount, onClear, onToggleAffirmations, affirmationsOpen, onExport, onToggleLayers, layersPanelOpen }: Props) {
+export default function Topbar({ layerCount, onClear, onToggleAffirmations, affirmationsOpen, onExport, exporting, onToggleLayers, layersPanelOpen }: Props) {
   return (
     <header className={styles.bar}>
       <div className={styles.brand}>
@@ -35,8 +36,12 @@ export default function Topbar({ layerCount, onClear, onToggleAffirmations, affi
           ⊞ Layers
         </button>
         <div className={styles.sep} />
-        <button className={`${styles.btn} ${styles.exportBtn}`} onClick={onExport} disabled={layerCount === 0}>
-          ↓ Export PNG
+        <button
+          className={`${styles.btn} ${styles.exportBtn}`}
+          onClick={onExport}
+          disabled={layerCount === 0 || exporting}
+        >
+          {exporting ? <><span className={styles.exportSpinner} /> Exporting…</> : "↓ Export PNG"}
         </button>
         <button className={`${styles.btn} ${styles.danger}`} onClick={onClear} disabled={layerCount === 0}>
           Clear

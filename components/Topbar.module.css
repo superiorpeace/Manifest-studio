@@ -83,3 +83,14 @@
   background: rgba(60,200,144,.1);
   border-color: rgba(60,200,144,.4);
 }
+
+.exportSpinner {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border: 1.5px solid rgba(60,200,144,.4);
+  border-top-color: var(--jade);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  vertical-align: middle;
+  margin-right: 4px;
+}
