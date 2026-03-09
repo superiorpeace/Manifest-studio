@@ -77,3 +77,9 @@
   color: var(--rose);
   animation: glimmer 2s ease-in-out infinite;
 }
+
+.exportBtn:hover:not(:disabled) {
+  color: var(--jade);
+  background: rgba(60,200,144,.1);
+  border-color: rgba(60,200,144,.4);
+}

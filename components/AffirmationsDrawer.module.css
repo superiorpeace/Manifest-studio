@@ -268,3 +268,29 @@
 }
 .cardBtn:hover        { border-color: var(--rose); color: var(--rose); }
 .cardBtnCopied        { background: rgba(60,200,144,.1); border-color: var(--jade); color: var(--jade); }
+
+/* Tabs */
+.tabs { display: flex; border-bottom: 1px solid var(--b); flex-shrink: 0; }
+.tab {
+  flex: 1; padding: 11px; font-size: 11px; font-weight: 500;
+  color: var(--t2); border-bottom: 2px solid transparent;
+  transition: all .18s ease;
+}
+.tab:hover { color: var(--t); }
+.tabOn { color: var(--rose); border-bottom-color: var(--rose); }
+
+/* Topic input */
+.topicInput {
+  width: 100%;
+  background: var(--s2);
+  border: 1px solid var(--b2);
+  border-radius: var(--r-sm);
+  color: var(--t);
+  font-size: 12px;
+  padding: 10px 12px;
+  line-height: 1.5;
+  resize: none;
+  font-family: var(--f-ui);
+}
+.topicInput:focus { border-color: var(--rose); }
+.topicInput::placeholder { color: var(--t3); }

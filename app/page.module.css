@@ -1,11 +1,3 @@
-.root {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-}
-.workspace {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-}
+.root { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+.workspace { flex: 1; display: flex; overflow: hidden; }
+.rightCol { display: flex; flex-direction: column; width: 230px; flex-shrink: 0; overflow: hidden; }

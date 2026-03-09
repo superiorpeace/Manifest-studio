@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import type { Layer, TextLayer } from "@/lib/types";
 import { uid } from "@/lib/utils";
 import Topbar from "@/components/Topbar";
 import LeftPanel from "@/components/LeftPanel";
 import Canvas from "@/components/Canvas";
 import PropertiesPanel from "@/components/PropertiesPanel";
+import LayersPanel from "@/components/LayersPanel";
 import AffirmationsDrawer from "@/components/AffirmationsDrawer";
 import styles from "./page.module.css";
 
@@ -15,6 +16,8 @@ export default function Page() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [background, setBackground] = useState("#080706");
   const [affirmationsOpen, setAffirmationsOpen] = useState(false);
+  const [layersPanelOpen, setLayersPanelOpen] = useState(true);
+  const canvasRef = useRef<HTMLDivElement>(null);
 
   const addLayer = useCallback((layer: Layer) => {
     setLayers(p => [...p, { ...layer, zIndex: p.length }]);
@@ -51,13 +54,32 @@ export default function Page() {
 
   const clearAll = useCallback(() => { setLayers([]); setSelectedId(null); }, []);
 
-  const insertAffirmation = useCallback((text: string) => {
+  const exportPNG = useCallback(async () => {
+    const el = canvasRef.current;
+    if (!el) return;
+    try {
+      const { default: html2canvas } = await import("html2canvas");
+      const canvas = await html2canvas(el, {
+        useCORS: true, allowTaint: true,
+        width: el.offsetWidth, height: el.offsetHeight,
+        backgroundColor: null,
+      });
+      const link = document.createElement("a");
+      link.download = `manifest-studio-${Date.now()}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch {
+      alert("Export failed. Try adding html2canvas: npm install html2canvas");
+    }
+  }, []);
+
+  const insertText = useCallback((text: string) => {
     const layer: TextLayer = {
       id: uid(), type: "text",
       x: 60, y: 100, width: 400, height: 140,
       rotation: 0, opacity: 1, zIndex: layers.length,
-      content: text,
-      fontSize: 34, fontFamily: "'Playfair Display', Georgia, serif",
+      content: text, fontSize: 34,
+      fontFamily: "'Playfair Display', Georgia, serif",
       fontWeight: "700", fontStyle: "italic",
       color: "#ede8e0", textAlign: "center",
       textShadow: true, bgColor: "#000000", bgOpacity: 0,
@@ -76,9 +98,13 @@ export default function Page() {
         onClear={clearAll}
         onToggleAffirmations={() => setAffirmationsOpen(v => !v)}
         affirmationsOpen={affirmationsOpen}
+        onExport={exportPNG}
+        onToggleLayers={() => setLayersPanelOpen(v => !v)}
+        layersPanelOpen={layersPanelOpen}
       />
       <div className={styles.workspace}>
         <LeftPanel onAddLayer={addLayer} layerCount={layers.length} />
+
         <Canvas
           layers={layers}
           selectedId={selectedId}
@@ -86,20 +112,39 @@ export default function Page() {
           onSelect={setSelectedId}
           onUpdateLayer={updateLayer}
           onAddLayer={addLayer}
+          canvasRef={canvasRef}
         />
-        <PropertiesPanel
-          selected={selected}
-          onUpdate={(patch) => selected && updateLayer(selected.id, patch)}
-          onDelete={() => selected && deleteLayer(selected.id)}
-          onDuplicate={() => selected && duplicateLayer(selected.id)}
-          onReorder={(dir) => selected && reorder(selected.id, dir)}
-          background={background}
-          onChangeBackground={setBackground}
-        />
+
+        <div className={styles.rightCol}>
+          {layersPanelOpen && (
+            <LayersPanel
+              layers={layers}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+              onDelete={deleteLayer}
+              onDuplicate={duplicateLayer}
+              onReorder={reorder}
+              onVisibilityToggle={(id) => {
+                const l = layers.find(x => x.id === id);
+                if (l) updateLayer(id, { opacity: l.opacity > 0 ? 0 : 1 });
+              }}
+            />
+          )}
+          <PropertiesPanel
+            selected={selected}
+            onUpdate={(patch) => selected && updateLayer(selected.id, patch)}
+            onDelete={() => selected && deleteLayer(selected.id)}
+            onDuplicate={() => selected && duplicateLayer(selected.id)}
+            onReorder={(dir) => selected && reorder(selected.id, dir)}
+            background={background}
+            onChangeBackground={setBackground}
+          />
+        </div>
       </div>
+
       {affirmationsOpen && (
         <AffirmationsDrawer
-          onInsert={insertAffirmation}
+          onInsert={insertText}
           onClose={() => setAffirmationsOpen(false)}
         />
       )}
