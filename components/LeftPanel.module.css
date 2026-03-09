@@ -1,0 +1,73 @@
+.panel {
+  width: 200px;
+  flex-shrink: 0;
+  background: var(--s1);
+  border-right: 1px solid var(--b);
+  padding: 18px 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.heading {
+  font-family: var(--f-mono);
+  font-size: 8px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--t3);
+}
+
+.tools { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+.tool {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 14px 6px;
+  background: var(--s2);
+  border: 1px solid var(--b);
+  border-radius: var(--r-sm);
+  transition: all .18s ease;
+}
+.tool:hover {
+  background: var(--s3);
+  border-color: var(--b2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+}
+
+.toolIcon {
+  font-size: 20px;
+  font-family: var(--f-display);
+  color: var(--rose);
+  line-height: 1;
+}
+.toolLabel {
+  font-size: 9.5px;
+  font-weight: 500;
+  color: var(--t2);
+  letter-spacing: .3px;
+}
+
+.hint {
+  font-family: var(--f-mono);
+  font-size: 8.5px;
+  color: var(--t3);
+  line-height: 1.7;
+  text-align: center;
+}
+
+.divider { height: 1px; background: var(--b); margin: 2px 0; }
+
+.formats { display: flex; flex-direction: column; gap: 8px; }
+
+.format {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.formatEmoji { font-size: 14px; }
+.formatLabel { font-size: 9px; font-weight: 600; color: var(--t2); margin-bottom: 1px; }
+.formatDesc  { font-family: var(--f-mono); font-size: 7.5px; color: var(--t3); }

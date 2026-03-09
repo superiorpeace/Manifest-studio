@@ -1,0 +1,50 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #080706;
+  --s1:         #100f0e;
+  --s2:         #181614;
+  --s3:         #222018;
+  --s4:         #2c2a26;
+  --b:          rgba(255,255,255,.055);
+  --b2:         rgba(255,255,255,.10);
+  --t:          #ede8e0;
+  --t2:         #968c80;
+  --t3:         #504840;
+  --rose:       #d4608a;
+  --rose-dim:   rgba(212,96,138,.14);
+  --rose-glow:  rgba(212,96,138,.32);
+  --gold:       #c8922a;
+  --jade:       #3cc890;
+  --sky:        #48b0e8;
+
+  --f-display: 'Playfair Display', Georgia, serif;
+  --f-ui:      'Syne', sans-serif;
+  --f-mono:    'DM Mono', monospace;
+
+  --r-xs:  4px;  --r-sm:  8px;
+  --r-md: 12px;  --r-lg: 18px;  --r-xl: 26px;
+}
+
+html, body {
+  height: 100%; overflow: hidden;
+  background: var(--bg);
+  color: var(--t);
+  font-family: var(--f-ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-thumb { background: var(--s4); border-radius: 99px; }
+::selection { background: var(--rose-dim); }
+:focus-visible { outline: 1.5px solid var(--rose); outline-offset: 2px; border-radius: 3px; }
+
+button { cursor: pointer; font-family: var(--f-ui); border: none; background: none; color: inherit; transition: all .18s ease; }
+button:disabled { opacity: .4; cursor: not-allowed; }
+input, textarea, select { font-family: var(--f-ui); color: var(--t); outline: none; }
+
+@keyframes fadeUp  { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes spin    { to { transform: rotate(360deg); } }
+@keyframes breathe { 0%,100%{opacity:.4;transform:scale(1)} 50%{opacity:.8;transform:scale(1.04)} }
+@keyframes ripple  { to { transform:scale(2.5); opacity:0; } }
+@keyframes glimmer { 0%{opacity:.3} 50%{opacity:.7} 100%{opacity:.3} }
